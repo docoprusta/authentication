@@ -37,5 +37,5 @@ task buildDockerImage(type: DockerBuildImage) {
     dependsOn   copyJar
     inputDir = file(buildDockerPath)
     buildArgs = [ JAR_FILE : "${jarFile.getName()}" ]
-    images.add("authentication:${project.version}")
+    images.add("authentication:latest")
 }
