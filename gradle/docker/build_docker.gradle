@@ -26,16 +26,17 @@ task copyJar(type: Copy) {
     dependsOn   'build'
     from    "${jarFile.getAbsolutePath()}"
     into    buildDockerPath
+    rename { String fileName ->
+        fileName.replace("-${project.version}", "")
+    }
 }
 
 task buildDockerImage(type: DockerBuildImage) {
     group = 'Docker'
     description = 'Tasks for building docker images'
 
-    print jarFile.getName()
-
     dependsOn   copyJar
     inputDir = file(buildDockerPath)
-    buildArgs = [ JAR_FILE : "${jarFile.getName()}" ]
+    buildArgs = [ JAR_FILE : "authentication.jar" ]
     images.add("authentication:${project.version}")
 }
