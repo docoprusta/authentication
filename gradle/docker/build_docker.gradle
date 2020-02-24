@@ -14,11 +14,18 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
 def jarFile = file("build/libs/authentication-${project.version}.jar")
 def dockerfilePath = 'etc/docker'
+def buildDockerPath = 'build/docker'
+
+task copyDockerfile(type: Copy) {
+    from dockerfilePath
+    into buildDockerPath
+}
 
 task copyJar(type: Copy) {
+    dependsOn   'copyDockerfile'
     dependsOn   'build'
     from    "${jarFile.getAbsolutePath()}"
-    into    dockerfilePath
+    into    buildDockerPath
 }
 
 task buildDockerImage(type: DockerBuildImage) {
@@ -28,7 +35,7 @@ task buildDockerImage(type: DockerBuildImage) {
     print jarFile.getName()
 
     dependsOn   copyJar
-    inputDir = file(dockerfilePath)
+    inputDir = file(buildDockerPath)
     buildArgs = [ JAR_FILE : "${jarFile.getName()}" ]
     images.add("authentication:${project.version}")
 }
