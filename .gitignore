@@ -30,3 +30,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Built .jar file(s)
+etc/docker/activity-*.jar
