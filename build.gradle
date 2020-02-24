@@ -1,0 +1,28 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+
+group = 'com.soma'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+apply from: 'gradle/docker/build_docker.gradle'
+
+dependencies {
+    implementation 'com.google.guava:guava:28.2-jre'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.2.4.RELEASE'
+    implementation 'com.auth0:java-jwt:3.10.0'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

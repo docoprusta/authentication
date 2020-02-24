@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.bmuschko:gradle-docker-plugin:6.1.4"
+    }
+}
+
+apply plugin: DockerRemoteApiPlugin
+
+import com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
+def jarFile = file("build/libs/authentication-${project.version}.jar")
+def dockerfilePath = 'etc/docker'
+
+task copyJar(type: Copy) {
+    dependsOn   'build'
+    from    "${jarFile.getAbsolutePath()}"
+    into    dockerfilePath
+}
+
+task buildDockerImage(type: DockerBuildImage) {
+    group = 'Docker'
+    description = 'Tasks for building docker images'
+
+    print jarFile.getName()
+
+    dependsOn   copyJar
+    inputDir = file(dockerfilePath)
+    buildArgs = [ JAR_FILE : "${jarFile.getName()}" ]
+    images.add("authentication:${project.version}")
+}
